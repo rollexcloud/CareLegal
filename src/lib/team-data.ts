@@ -1,19 +1,32 @@
-import fs from "fs/promises";
-import path from "path";
 import { TeamMember } from "@/types/team";
+import { adminDb } from "@/lib/firebase-admin";
 
-const TEAM_DATA_PATH = path.join(process.cwd(), "src", "data", "team-members.json");
+const teamCollection = adminDb.collection("teamMembers");
 
 export async function readTeamMembers(): Promise<TeamMember[]> {
-  const raw = await fs.readFile(TEAM_DATA_PATH, "utf-8");
-  const members: TeamMember[] = JSON.parse(raw);
-  return members;
+  try {
+    const snapshot = await teamCollection.orderBy("name").get();
+    return snapshot.docs.map((doc) => ({ id: doc.id, ...(doc.data() as Omit<TeamMember, "id">) }));
+  } catch (error) {
+    console.warn("Failed to read team members from Firestore; returning empty list.", error);
+    return [];
+  }
 }
 
-export async function writeTeamMembers(members: TeamMember[]): Promise<void> {
-  await fs.writeFile(
-    TEAM_DATA_PATH,
-    JSON.stringify(members, null, 2) + "\n",
-    "utf-8"
-  );
+export async function getTeamMember(memberId: string): Promise<TeamMember | null> {
+  const doc = await teamCollection.doc(memberId).get();
+
+  if (!doc.exists) {
+    return null;
+  }
+
+  return { id: doc.id, ...(doc.data() as Omit<TeamMember, "id">) };
+}
+
+export async function saveTeamMember(member: TeamMember): Promise<void> {
+  await teamCollection.doc(member.id).set(member);
+}
+
+export async function removeTeamMember(memberId: string): Promise<void> {
+  await teamCollection.doc(memberId).delete();
 }

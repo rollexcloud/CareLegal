@@ -1,17 +1,27 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { BlogPost } from "@/types/blog";
 import { TeamMember } from "@/types/team";
-import { readBlogPosts, writeBlogPosts } from "@/lib/blog-data";
-import { readTeamMembers, writeTeamMembers } from "@/lib/team-data";
+import {
+  readBlogPosts,
+  saveBlogPost,
+  getBlogPost,
+  deleteBlogPost,
+} from "@/lib/blog-data";
+import {
+  readTeamMembers,
+  saveTeamMember,
+  getTeamMember,
+  removeTeamMember,
+} from "@/lib/team-data";
 
-import { assertAuthorized } from "@/lib/admin-auth";
+import { assertAdminSession, destroyAdminSession } from "@/lib/admin-session";
 
 export async function createPost(formData: FormData) {
-  assertAuthorized(formData);
+  assertAdminSession();
 
-  const posts = await readBlogPosts();
   const now = new Date();
   const id = `post-${now.getTime()}`;
 
@@ -28,16 +38,14 @@ export async function createPost(formData: FormData) {
     throw new Error("Title, description, and content are required.");
   }
 
-  const nextPosts = [newPost, ...posts];
-  await writeBlogPosts(nextPosts);
+  await saveBlogPost(newPost);
   revalidatePath("/blog");
   revalidatePath("/blog/admin");
 }
 
 export async function createTeamMember(formData: FormData) {
-  assertAuthorized(formData);
+  assertAdminSession();
 
-  const members = await readTeamMembers();
   const newMember: TeamMember = {
     id: `team-${Date.now()}`,
     name: String(formData.get("name") ?? "").trim(),
@@ -50,99 +58,97 @@ export async function createTeamMember(formData: FormData) {
     throw new Error("All team member fields are required.");
   }
 
-  const nextMembers = [newMember, ...members];
-  await writeTeamMembers(nextMembers);
+  await saveTeamMember(newMember);
   revalidatePath("/our-team");
   revalidatePath("/blog/admin");
 }
 
 export async function updateTeamMember(formData: FormData) {
-  assertAuthorized(formData);
+  assertAdminSession();
 
   const memberId = String(formData.get("id"));
-  const members = await readTeamMembers();
-  const idx = members.findIndex((member) => member.id === memberId);
+  const existing = await getTeamMember(memberId);
 
-  if (idx === -1) {
+  if (!existing) {
     throw new Error("Team member not found");
   }
 
   const updated: TeamMember = {
-    ...members[idx],
-    name: String(formData.get("name") ?? members[idx].name).trim(),
-    designation: String(formData.get("designation") ?? members[idx].designation).trim(),
-    quote: String(formData.get("quote") ?? members[idx].quote).trim(),
-    image: String(formData.get("image") ?? members[idx].image).trim(),
+    ...existing,
+    name: String(formData.get("name") ?? existing.name).trim(),
+    designation: String(formData.get("designation") ?? existing.designation).trim(),
+    quote: String(formData.get("quote") ?? existing.quote).trim(),
+    image: String(formData.get("image") ?? existing.image).trim(),
   };
 
   if (!updated.name || !updated.designation || !updated.quote || !updated.image) {
     throw new Error("All team member fields are required.");
   }
 
-  members[idx] = updated;
-  await writeTeamMembers(members);
+  await saveTeamMember(updated);
   revalidatePath("/our-team");
   revalidatePath("/blog/admin");
 }
 
 export async function deleteTeamMember(formData: FormData) {
-  assertAuthorized(formData);
+  assertAdminSession();
 
   const id = String(formData.get("id"));
-  const members = await readTeamMembers();
-  const nextMembers = members.filter((member) => member.id !== id);
+  const existing = await getTeamMember(id);
 
-  if (nextMembers.length === members.length) {
+  if (!existing) {
     throw new Error("Team member not found");
   }
 
-  await writeTeamMembers(nextMembers);
+  await removeTeamMember(id);
   revalidatePath("/our-team");
   revalidatePath("/blog/admin");
 }
 
 export async function updatePost(formData: FormData) {
-  assertAuthorized(formData);
+  assertAdminSession();
 
   const postId = String(formData.get("id"));
-  const posts = await readBlogPosts();
-  const idx = posts.findIndex((p) => p.id === postId);
+  const existing = await getBlogPost(postId);
 
-  if (idx === -1) {
+  if (!existing) {
     throw new Error("Post not found");
   }
 
   const updated: BlogPost = {
-    ...posts[idx],
-    title: String(formData.get("title") ?? posts[idx].title).trim(),
-    description: String(formData.get("description") ?? posts[idx].description).trim(),
-    date: String(formData.get("date") ?? posts[idx].date),
-    image: String(formData.get("image") ?? posts[idx].image).trim(),
-    content: String(formData.get("content") ?? posts[idx].content).trim(),
+    ...existing,
+    title: String(formData.get("title") ?? existing.title).trim(),
+    description: String(formData.get("description") ?? existing.description).trim(),
+    date: String(formData.get("date") ?? existing.date),
+    image: String(formData.get("image") ?? existing.image).trim(),
+    content: String(formData.get("content") ?? existing.content).trim(),
   };
 
   if (!updated.title || !updated.description || !updated.content) {
     throw new Error("Title, description, and content are required.");
   }
 
-  posts[idx] = updated;
-  await writeBlogPosts(posts);
+  await saveBlogPost(updated);
   revalidatePath("/blog");
   revalidatePath("/blog/admin");
 }
 
 export async function deletePost(formData: FormData) {
-  assertAuthorized(formData);
+  assertAdminSession();
 
   const id = String(formData.get("id"));
-  const posts = await readBlogPosts();
-  const nextPosts = posts.filter((post) => post.id !== id);
+  const existing = await getBlogPost(id);
 
-  if (nextPosts.length === posts.length) {
+  if (!existing) {
     throw new Error("Post not found");
   }
 
-  await writeBlogPosts(nextPosts);
+  await deleteBlogPost(id);
   revalidatePath("/blog");
   revalidatePath("/blog/admin");
+}
+
+export async function logout(returnTo?: string) {
+  destroyAdminSession();
+  redirect(returnTo && returnTo.startsWith("/") ? returnTo : "/blog/admin/login");
 }

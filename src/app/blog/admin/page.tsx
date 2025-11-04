@@ -1,5 +1,6 @@
 import { readBlogPosts } from "@/lib/blog-data";
 import { readTeamMembers } from "@/lib/team-data";
+import { requireAdminSession } from "@/lib/admin-session";
 import BlogAdminPanel from "@/components/blog/BlogAdminPanel";
 
 export const dynamic = "force-dynamic";
@@ -21,6 +22,8 @@ export default async function BlogAdminPage() {
       </div>
     );
   }
+
+  requireAdminSession();
 
   const posts = await readBlogPosts();
   const teamMembers = await readTeamMembers();

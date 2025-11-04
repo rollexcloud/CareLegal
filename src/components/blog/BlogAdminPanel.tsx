@@ -8,6 +8,7 @@ import {
   createTeamMember,
   deleteTeamMember,
   updateTeamMember,
+  logout,
 } from "@/app/blog/admin/actions";
 import { BlogPost } from "@/types/blog";
 import { TeamMember } from "@/types/team";
@@ -38,8 +39,6 @@ type Message = {
 };
 
 export default function BlogAdminPanel({ posts, teamMembers }: BlogAdminPanelProps) {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const [message, setMessage] = useState<Message | null>(null);
   const [draft, setDraft] = useState<Partial<BlogPost>>(emptyForm);
   const [teamDraft, setTeamDraft] = useState<Partial<TeamMember>>(emptyTeamForm);
@@ -55,13 +54,7 @@ export default function BlogAdminPanel({ posts, teamMembers }: BlogAdminPanelPro
     [teamMembers]
   );
 
-  function injectCredentials(formData: FormData) {
-    formData.set("username", username);
-    formData.set("password", password);
-  }
-
   function handleCreateSubmit(formData: FormData) {
-    injectCredentials(formData);
     startTransition(async () => {
       try {
         await createPost(formData);
@@ -77,7 +70,6 @@ export default function BlogAdminPanel({ posts, teamMembers }: BlogAdminPanelPro
   }
 
   function handleUpdateSubmit(postId: string, formData: FormData) {
-    injectCredentials(formData);
     formData.set("id", postId);
     startTransition(async () => {
       try {
@@ -94,7 +86,6 @@ export default function BlogAdminPanel({ posts, teamMembers }: BlogAdminPanelPro
 
   function handleDelete(postId: string) {
     const formData = new FormData();
-    formData.set("password", password);
     formData.set("id", postId);
 
     startTransition(async () => {
@@ -134,7 +125,6 @@ export default function BlogAdminPanel({ posts, teamMembers }: BlogAdminPanelPro
   }
 
   function handleTeamCreate(formData: FormData) {
-    injectCredentials(formData);
     startTransition(async () => {
       try {
         await createTeamMember(formData);
@@ -150,7 +140,6 @@ export default function BlogAdminPanel({ posts, teamMembers }: BlogAdminPanelPro
   }
 
   function handleTeamUpdate(memberId: string, formData: FormData) {
-    injectCredentials(formData);
     formData.set("id", memberId);
     startTransition(async () => {
       try {
@@ -167,7 +156,6 @@ export default function BlogAdminPanel({ posts, teamMembers }: BlogAdminPanelPro
 
   function handleTeamDelete(memberId: string) {
     const formData = new FormData();
-    injectCredentials(formData);
     formData.set("id", memberId);
 
     startTransition(async () => {
@@ -183,48 +171,30 @@ export default function BlogAdminPanel({ posts, teamMembers }: BlogAdminPanelPro
     });
   }
 
+  const logoutAction = logout.bind(null, "/blog/admin/login");
+
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-16">
       <div className="max-w-5xl mx-auto px-4 space-y-10">
         <header className="space-y-4">
-          <h1 className="text-3xl font-bold text-neutral-900 dark:text-neutral-100">
-            Blog Admin
-          </h1>
-          <p className="text-neutral-600 dark:text-neutral-400">
-            Provide your admin credentials to manage site content. Changes are saved to
-            <code className="mx-1 rounded bg-neutral-200 px-1 py-0.5 text-sm dark:bg-neutral-800">
-              src/data/blog-posts.json
-            </code>
-            and
-            <code className="mx-1 rounded bg-neutral-200 px-1 py-0.5 text-sm dark:bg-neutral-800">
-              src/data/team-members.json
-            </code>
-            and will require committing updates to GitHub.
-          </p>
-          <div className="grid gap-3 sm:grid-cols-2">
-            <label className="flex flex-col gap-1">
-              <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
-                Username
-              </span>
-              <input
-                value={username}
-                onChange={(event) => setUsername(event.target.value)}
-                className="w-full rounded border border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-200 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
-                placeholder="admin username"
-              />
-            </label>
-            <label className="flex flex-col gap-1">
-              <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
-                Password
-              </span>
-              <input
-                type="password"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                className="w-full rounded border border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-200 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
-                placeholder="Enter password"
-              />
-            </label>
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-neutral-900 dark:text-neutral-100">
+                Blog Admin
+              </h1>
+              <p className="mt-2 max-w-2xl text-neutral-600 dark:text-neutral-400">
+                Manage blog posts and team members stored in Firebase Firestore. Remember to redeploy the
+                site after making changes that should go live.
+              </p>
+            </div>
+            <form action={logoutAction} className="shrink-0">
+              <button
+                type="submit"
+                className="inline-flex items-center rounded border border-neutral-300 bg-white px-4 py-2 text-sm font-semibold text-neutral-900 transition hover:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-neutral-300 focus:ring-offset-2 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
+              >
+                Log out
+              </button>
+            </form>
           </div>
           {message ? (
             <div
@@ -319,7 +289,7 @@ export default function BlogAdminPanel({ posts, teamMembers }: BlogAdminPanelPro
             <button
               type="submit"
               className="inline-flex items-center rounded bg-teal-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-offset-2 disabled:opacity-50"
-              disabled={pending || !password || !username}
+              disabled={pending}
             >
               {pending ? "Saving..." : "Create post"}
             </button>
@@ -410,7 +380,7 @@ export default function BlogAdminPanel({ posts, teamMembers }: BlogAdminPanelPro
                     <button
                       type="submit"
                       className="inline-flex items-center rounded bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 disabled:opacity-50"
-                      disabled={pending || !password || !username}
+                      disabled={pending}
                     >
                       {pending ? "Saving..." : "Save changes"}
                     </button>
@@ -418,7 +388,7 @@ export default function BlogAdminPanel({ posts, teamMembers }: BlogAdminPanelPro
                       type="button"
                       onClick={() => handleDelete(post.id)}
                       className="inline-flex items-center rounded bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 disabled:opacity-50"
-                      disabled={pending || !password || !username}
+                      disabled={pending}
                     >
                       {pending ? "Deleting..." : "Delete"}
                     </button>
@@ -498,7 +468,7 @@ export default function BlogAdminPanel({ posts, teamMembers }: BlogAdminPanelPro
               <button
                 type="submit"
                 className="inline-flex items-center rounded bg-teal-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-offset-2 disabled:opacity-50"
-                disabled={pending || !password || !username}
+                disabled={pending}
               >
                 {pending ? "Saving..." : "Add member"}
               </button>
@@ -568,7 +538,7 @@ export default function BlogAdminPanel({ posts, teamMembers }: BlogAdminPanelPro
                     <button
                       type="submit"
                       className="inline-flex items-center rounded bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 disabled:opacity-50"
-                      disabled={pending || !password || !username}
+                      disabled={pending}
                     >
                       {pending ? "Saving..." : "Save changes"}
                     </button>
@@ -576,7 +546,7 @@ export default function BlogAdminPanel({ posts, teamMembers }: BlogAdminPanelPro
                       type="button"
                       onClick={() => handleTeamDelete(member.id)}
                       className="inline-flex items-center rounded bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 disabled:opacity-50"
-                      disabled={pending || !password || !username}
+                      disabled={pending}
                     >
                       {pending ? "Deleting..." : "Remove"}
                     </button>
