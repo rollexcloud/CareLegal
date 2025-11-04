@@ -1,7 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    experimental: {
+        serverActions: {
+            bodySizeLimit: '2mb'
+        }
+    },
     images: {
-        domains: ['images.unsplash.com', 'res.cloudinary.com']
+        domains: ['images.unsplash.com', 'res.cloudinary.com', 'images.pexels.com']
     }
 };
 

@@ -99,6 +99,10 @@ From package.json:
   - images.unsplash.com
   - res.cloudinary.com
   If your app uses other image hosts, add them to `images.domains` in `next.config.mjs`.
+- Blog admin access:
+  - The route `/blog/admin` is hidden from public navigation and protected via HTTP Basic Auth middleware in production.
+  - Set `BLOG_ADMIN_PASSWORD` (and optionally `BLOG_ADMIN_USERNAME`, defaults to `owner`) in the hosting platform before deploying.
+  - Locally, you can place these in `.env.local`. Without a password, the admin UI will show a configuration warning.
 
 
 

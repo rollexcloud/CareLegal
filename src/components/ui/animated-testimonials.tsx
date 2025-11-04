@@ -33,11 +33,16 @@ export const AnimatedTestimonials = ({
   };
 
   useEffect(() => {
-    if (autoplay) {
-      const interval = setInterval(handleNext, 5000);
-      return () => clearInterval(interval);
+    if (!autoplay) {
+      return;
     }
-  }, [autoplay]);
+
+    const interval = setInterval(() => {
+      setActive((prev) => (prev + 1) % testimonials.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [autoplay, testimonials.length]);
 
   const randomRotateY = () => {
     return Math.floor(Math.random() * 21) - 10;

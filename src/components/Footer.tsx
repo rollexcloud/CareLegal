@@ -7,9 +7,7 @@ function Footer() {
         <div>
           <h2 className="text-white text-lg font-semibold mb-4">About Us</h2>
           <p className="mb-4">
-            Music School is a premier institution dedicated to teaching the art
-            and science of music. We nurture talent from the ground up,
-            fostering a vibrant community of musicians.
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur nam ullam maiores hic quod fugiat fuga officiis debitis cupiditate nostrum. Pariatur quae nemo voluptate rerum, atque ex voluptatibus dolorum sequi.
           </p>
         </div>
         <div>
@@ -36,7 +34,7 @@ function Footer() {
                 href="#"
                 className="hover:text-white transition-colors duration-300"
               >
-                Courses
+                News
               </a>
             </li>
             <li>
@@ -76,11 +74,11 @@ function Footer() {
           <h2 className="text-white text-lg font-semibold mb-4">Contact Us</h2>
           <p>New Delhi, India</p>
           <p>Delhi 10001</p>
-          <p>Email: info@musicschool.com</p>
+          <p>Email: info@carelegal.com</p>
           <p>Phone: (123) 456-7890</p>
         </div>
         </div>
-        <p className="text-center text-xs pt-8">© 2024 Music School. All rights reserved.</p>
+        <p className="text-center text-xs pt-8">© 2025 CareLegal. All rights reserved.</p>
     </footer>
   )
 }

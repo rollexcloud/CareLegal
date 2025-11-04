@@ -1,5 +1,5 @@
-import NewsReport from "@/components/newsreport";
+import { redirect } from "next/navigation";
 
 export default function NewsReportPage() {
-  return <NewsReport />;
+  redirect("/blog");
 }
