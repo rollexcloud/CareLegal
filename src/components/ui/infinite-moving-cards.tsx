@@ -1,7 +1,14 @@
 "use client";
 
 import { cn } from "@/utils/cn";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+
+type CardItem = {
+  quote: string;
+  name: string;
+  title: string;
+  _loopKey?: string;
+};
 
 export const InfiniteMovingCards = ({
   items,
@@ -10,93 +17,91 @@ export const InfiniteMovingCards = ({
   pauseOnHover = true,
   className,
 }: {
-  items: {
-    quote: string;
-    name: string;
-    title: string;
-  }[];
+  items: CardItem[];
   direction?: "left" | "right";
   speed?: "fast" | "normal" | "slow";
   pauseOnHover?: boolean;
   className?: string;
 }) => {
   const containerRef = React.useRef<HTMLDivElement>(null);
-  const scrollerRef = React.useRef<HTMLUListElement>(null);
-  const [start, setStart] = useState(false);
-
-  const getDirection = useCallback(() => {
-    if (containerRef.current) {
-      if (direction === "left") {
-        containerRef.current.style.setProperty(
-          "--animation-direction",
-          "forwards"
-        );
-      } else {
-        containerRef.current.style.setProperty(
-          "--animation-direction",
-          "reverse"
-        );
-      }
-    }
-  }, [direction]);
-
-  const getSpeed = useCallback(() => {
-    if (containerRef.current) {
-      if (speed === "fast") {
-        containerRef.current.style.setProperty("--animation-duration", "20s");
-      } else if (speed === "normal") {
-        containerRef.current.style.setProperty("--animation-duration", "40s");
-      } else {
-        containerRef.current.style.setProperty("--animation-duration", "80s");
-      }
-    }
-  }, [speed]);
-
-  const addAnimation = useCallback(() => {
-    if (containerRef.current && scrollerRef.current) {
-      const scrollerContent = Array.from(scrollerRef.current.children);
-
-      scrollerContent.forEach((item) => {
-        const duplicatedItem = item.cloneNode(true);
-        if (scrollerRef.current) {
-          scrollerRef.current.appendChild(duplicatedItem);
-        }
-      });
-
-      getDirection();
-      getSpeed();
-      setStart(true);
-    }
-  }, [getDirection, getSpeed]);
+  const [shouldAnimate, setShouldAnimate] = useState(false);
 
   useEffect(() => {
-    addAnimation();
-  }, [addAnimation]);
+    const reduceMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    const update = () => {
+      setShouldAnimate(!reduceMotionQuery.matches);
+    };
+
+    update();
+    reduceMotionQuery.addEventListener("change", update);
+
+    return () => {
+      reduceMotionQuery.removeEventListener("change", update);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!shouldAnimate || !containerRef.current) {
+      return;
+    }
+
+    const animationDuration =
+      speed === "fast" ? "20s" : speed === "normal" ? "40s" : "80s";
+    containerRef.current.style.setProperty(
+      "--animation-duration",
+      animationDuration
+    );
+    containerRef.current.style.setProperty(
+      "--animation-direction",
+      direction === "left" ? "forwards" : "reverse"
+    );
+  }, [direction, speed, shouldAnimate]);
+
+  const renderedItems = useMemo(() => {
+    if (!shouldAnimate) {
+      return items;
+    }
+
+    return items.flatMap((item, index) => [
+      { ...item, _loopKey: `a-${index}` },
+      { ...item, _loopKey: `b-${index}` },
+    ]);
+  }, [items, shouldAnimate]);
 
   return (
     <div
       ref={containerRef}
       className={cn(
-        "scroller relative z-20  max-w-7xl overflow-hidden  [mask-image:linear-gradient(to_right,transparent,white_20%,white_80%,transparent)]",
+        "scroller relative z-20 max-w-7xl",
+        shouldAnimate
+          ? "overflow-hidden [mask-image:linear-gradient(to_right,transparent,white_15%,white_85%,transparent)]"
+          : "overflow-x-auto",
         className
       )}
     >
       <ul
-        ref={scrollerRef}
         className={cn(
-          " flex min-w-full shrink-0 gap-4 py-4 w-max flex-nowrap",
-          start && "animate-scroll ",
-          pauseOnHover && "hover:[animation-play-state:paused]"
+          "flex min-w-full gap-4 py-4",
+          shouldAnimate
+            ? cn(
+                "w-max flex-nowrap animate-scroll",
+                pauseOnHover && "hover:[animation-play-state:paused]"
+              )
+            : "snap-x snap-mandatory"
         )}
       >
-        {items.map((item, idx) => (
+        {renderedItems.map((item, idx) => (
           <li
-            className="w-[350px] max-w-full relative rounded-2xl border border-b-0 flex-shrink-0 border-slate-700 px-8 py-6 md:w-[450px]"
+            className={cn(
+              "relative w-[280px] max-w-full flex-shrink-0 rounded-2xl border border-b-0 border-slate-700 px-6 py-5 text-left",
+              !shouldAnimate && "snap-center"
+            )}
             style={{
               background:
-                "linear-gradient(180deg, var(--slate-800), var(--slate-900)",
+                "linear-gradient(180deg, var(--slate-800), var(--slate-900))",
             }}
-            key={item.name}
+            key={item._loopKey ?? `${item.name}-${idx}`}
           >
             <blockquote>
               <div
