@@ -138,12 +138,6 @@ function TestimonialsSection() {
               ))}
             </div>
 
-            <a
-              href="#contact"
-              className="mt-8 inline-flex items-center justify-center border border-[#1c170a] px-6 py-3 text-[12px] font-semibold uppercase tracking-[0.35em] text-[#1c170a] transition hover:bg-[#1c170a] hover:text-white"
-            >
-              View All Testimonials
-            </a>
           </div>
         </article>
       </div>

@@ -56,7 +56,7 @@ async function NewsSection() {
                 </div>
                 <div>
                   <a
-                    href="#contact"
+                    href="/contact"
                     className="inline-flex items-center text-[12px] font-semibold uppercase tracking-[0.35em] text-primary underline underline-offset-8"
                   >
                     Read More

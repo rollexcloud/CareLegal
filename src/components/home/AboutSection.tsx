@@ -11,8 +11,8 @@ const signatureLines = [
 
 function AboutSection() {
   return (
-    <section id="about" className="relative bg-[#f6f1e6] pb-28 pt-36">
-      <div className="mx-auto grid w/full max-w-[1140px] gap-16 px-4 sm:px-6 md:grid-cols-[1.05fr_1.05fr] md:items-center">
+    <section id="about" className="relative bg-[#f6f1e6] pb-32 pt-36 md:-mt-24 md:pb-40 md:pt-52 md:z-10">
+      <div className="mx-auto grid w/full max-w-[1140px] gap-16 px-4 sm:px-6 md:grid-cols-[1.05fr_1.05fr] md:items-start">
         <div className="space-y-8">
           <p className="text-[11px] font-semibold uppercase tracking-[0.4em] text-[#b4975a]">About The Firm</p>
           <h2 className="text-[36px] font-semibold leading-tight text-[#1c170a] sm:text-[44px]">
@@ -31,8 +31,8 @@ function AboutSection() {
         </div>
 
         <div className="relative">
-          <div className="relative ml-auto max-w-[520px] border border-white bg-white p-6 shadow-[0_25px_60px_rgba(0,0,0,0.12)]">
-            <div className="relative -mt-24 h-[360px] overflow-hidden border border-[#dcd3c1]">
+          <div className="relative ml-auto max-w-[520px] border border-white bg-white p-6 shadow-[0_25px_60px_rgba(0,0,0,0.12)] md:-mt-32 md:shadow-[0_45px_90px_rgba(0,0,0,0.18)]">
+            <div className="relative -mt-20 h-[360px] overflow-hidden border border-[#dcd3c1] md:-mt-32 md:h-[400px]">
               <Image
                 src={ABOUT_IMAGE}
                 alt="About law firm"

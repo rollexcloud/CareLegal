@@ -9,7 +9,7 @@ const NAV_LINKS = [
   { href: "/#about", label: "About" },
   { href: "/blog", label: "Articles" },
   { href: "/#attorneys", label: "Attorneys" },
-  { href: "/#contact", label: "Contact" },
+  { href: "/contact", label: "Contact" },
 ];
 
 type NavbarProps = {
@@ -78,17 +78,20 @@ function Navbar({ className }: NavbarProps) {
             type="button"
             aria-expanded={isMenuOpen}
             aria-label="Toggle navigation"
-            className="flex items-center justify-center rounded-full border border-primary/30 p-2 text-primary transition hover:bg-primary/10 md:hidden"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-primary/30 text-primary transition hover:bg-primary/10 md:hidden"
             onClick={() => setIsMenuOpen((open) => !open)}
           >
-            <span className="relative inline-block h-4 w-4">
-              <span className="absolute h-0.5 w-4 origin-center rounded bg-primary transition-transform duration-200"
+            <span className="relative inline-flex h-4 w-4 items-center justify-center">
+              <span
+                className="absolute h-0.5 w-4 origin-center rounded bg-primary transition-transform duration-200"
                 style={{ transform: isMenuOpen ? "translateY(0) rotate(45deg)" : "translateY(-6px) rotate(0deg)" }}
               />
-              <span className="absolute h-0.5 w-4 origin-center rounded bg-primary transition-opacity duration-200"
+              <span
+                className="absolute h-0.5 w-4 origin-center rounded bg-primary transition-opacity duration-200"
                 style={{ opacity: isMenuOpen ? 0 : 1 }}
               />
-              <span className="absolute h-0.5 w-4 origin-center rounded bg-primary transition-transform duration-200"
+              <span
+                className="absolute h-0.5 w-4 origin-center rounded bg-primary transition-transform duration-200"
                 style={{ transform: isMenuOpen ? "translateY(0) rotate(-45deg)" : "translateY(6px) rotate(0deg)" }}
               />
             </span>
