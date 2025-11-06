@@ -14,7 +14,7 @@ function SubmitButton() {
   return (
     <button
       type="submit"
-      className="inline-flex w-full justify-center rounded bg-teal-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-offset-2 disabled:opacity-50"
+      className="inline-flex w-full justify-center border border-[#c7a24a]/60 bg-[#c7a24a] px-4 py-3 text-sm font-semibold uppercase tracking-[0.28em] text-[#1c170a] transition hover:bg-[#e5c777] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c7a24a]/60 disabled:cursor-not-allowed disabled:opacity-60"
       disabled={pending}
     >
       {pending ? "Signing in..." : "Sign in"}
@@ -35,7 +35,7 @@ export function LoginForm({ returnTo }: LoginFormProps) {
         <input
           name="username"
           autoComplete="username"
-          className="w-full rounded border border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-200 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
+          className="w-full border border-[#d8c9a9] bg-white px-3 py-3 text-sm text-[#1c170a] transition focus:border-[#c7a24a] focus:outline-none focus:ring-2 focus:ring-[#c7a24a]/35 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
           placeholder="Admin username"
           required
         />
@@ -48,13 +48,13 @@ export function LoginForm({ returnTo }: LoginFormProps) {
           type="password"
           name="password"
           autoComplete="current-password"
-          className="w-full rounded border border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-200 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
+          className="w-full border border-[#d8c9a9] bg-white px-3 py-3 text-sm text-[#1c170a] transition focus:border-[#c7a24a] focus:outline-none focus:ring-2 focus:ring-[#c7a24a]/35 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
           placeholder="Enter password"
           required
         />
       </div>
       {state.error ? (
-        <p className="rounded-md bg-red-100 px-3 py-2 text-sm font-medium text-red-800 dark:bg-red-900/40 dark:text-red-200">
+        <p className="border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-800 dark:border-red-900/40 dark:bg-red-900/40 dark:text-red-200">
           {state.error}
         </p>
       ) : null}
