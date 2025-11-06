@@ -1,76 +1,83 @@
-import Link from "next/link"
-import { Spotlight } from "./ui/Spotlight"
-import { Button } from "./ui/moving-border";
-import { InfiniteMovingCards } from "./ui/infinite-moving-cards";
+import Image from "next/image";
+import Link from "next/link";
 
-
-const clientTestimonials = [
-  {
-    quote:
-      'Their guidance transformed a stressful legal process into a clear path forward. I felt supported and well-informed at every step — outstanding representation.',
-    name: 'Alex Johnson',
-    title: 'Personal Injury Client',
-  },
-  {
-    quote:
-      "The team’s communication and attention to detail were exceptional. They prepared me thoroughly for every meeting and helped secure a favorable outcome.",
-    name: 'Samantha Lee',
-    title: 'Family Law Client',
-  },
-  {
-    quote:
-      "I gained confidence thanks to their expert advice. They crafted a strong strategy and negotiated on my behalf with professionalism and care.",
-    name: 'Michael Chen',
-    title: 'Employment Law Client',
-  },
-  {
-    quote:
-      'They understood the complexities of my case and advocated decisively. Their experience made all the difference in reaching the resolution I needed.',
-    name: 'Emily Taylor',
-    title: 'Civil Litigation Client',
-  },
-  {
-    quote:
-      'Their legal team protected my business interests and handled negotiations skillfully. I highly recommend them for commercial and contract matters.',
-    name: 'Chris Morales',
-    title: 'Corporate Client',
-  },
+const HERO_BG =
+  "https://images.pexels.com/photos/5668432/pexels-photo-5668432.jpeg?auto=compress&cs=tinysrgb&w=1920&dpr=1";
+const HERO_IMAGE =
+  "https://images.pexels.com/photos/5669602/pexels-photo-5669602.jpeg?auto=compress&cs=tinysrgb&w=960&dpr=1";
+const heroStats = [
+  { value: "450+", label: "Trusted Clients" },
+  { value: "99%", label: "Success Rate" },
+  { value: "750K", label: "Recovered For Clients" },
+  { value: "445", label: "Trusted Partners" },
+  { value: "65+", label: "Years Combined" },
 ];
 
 function HeroSection() {
-    return (
-    <div
-    className="h-auto md:h-[40rem] w-full rounded-md flex flex-col items-center justify-center relative overflow-visible mx-auto py-10 md:py-0"
-    >
-        <Spotlight
-        className="-top-40 left-0 md:left-60 md:-top-20"
-        fill="white"
+  return (
+    <section className="relative overflow-hidden bg-[#0a0a0d] pb-36 pt-32 text-white">
+      <div
+        className="absolute inset-0 bg-cover bg-center opacity-25"
+        style={{ backgroundImage: `url(${HERO_BG})` }}
+        aria-hidden
       />
-        <div className="pb-10 pt-40 m-0 relative z-10 w-full text-center" >
-            <h1
-            className="mt-20 md:mt-0 mb-0 pb-5 text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 leading-normal"
-            >Care Legal</h1>
-            <p
-            className="mt-0 font-normal text-base md:text-lg text-neutral-300 max-w-lg mx-auto"
-            >Dedicated to justice, Committed to you.</p>
-            
+      <div className="absolute inset-0 bg-gradient-to-br from-black via-[#0b0b11]/95 to-[#141620]/85" aria-hidden />
+      <div className="relative mx-auto grid w/full max-w-[1140px] items-center gap-16 px-4 sm:px-6 md:grid-cols-[1.05fr_0.95fr]">
+        <div className="space-y-9">
+          <span className="inline-flex items-center rounded-full border border-[#c7a24a]/60 bg-[#c7a24a]/15 px-6 py-2 text-[11px] font-semibold uppercase tracking-[0.45em] text-[#e8c66d]">
+            Welcome to Law Firm
+          </span>
+          <h1 className="text-balance text-[36px] font-semibold leading-[1.1] text-white sm:text-[48px] md:text-[58px]">
+            We Are A Global Force In Legal Defense
+          </h1>
+          <p className="max-w-2xl text-[15px] leading-[1.9] text-white/70">
+            Click edit button to change this text. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.
+          </p>
+          <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+            <Link
+              href="/contact"
+              className="inline-flex items-center rounded-full bg-[#c7a24a] px-8 py-3 text-[11px] font-semibold uppercase tracking-[0.35em] text-[#1c170a] transition hover:bg-[#d8b86a]"
+            >
+              Schedule Consultation
+            </Link>
+            <Link
+              href="/#about"
+              className="inline-flex items-center rounded-full border border-white/40 px-8 py-3 text-[11px] font-semibold uppercase tracking-[0.35em] text-white transition hover:bg-white/10"
+            >
+              About The Firm
+            </Link>
+          </div>
+          <div className="grid gap-5 sm:grid-cols-3">
+            {heroStats.map(({ value, label }) => (
+              <div
+                key={label}
+                className="rounded-[12px] border border-white/15 bg-white/5 px-6 py-6 text-left shadow-[0_10px_20px_rgba(0,0,0,0.35)]"
+              >
+                <span className="text-[32px] font-semibold text-[#e5c777]">{value}</span>
+                <p className="mt-3 text-[11px] font-semibold uppercase tracking-[0.35em] text-white/70">
+                  {label}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
 
-         <div className=" w-full  relative flex flex-col items-center justify-center overflow-hidden">
-                 <h2 className="text-3xl font-bold text-center mb-8 z-10">Our Clients</h2>
-                 <div className="flex justify-center w-full overflow-hidden px-4 sm:px-6 lg:px-8">
-                     <div className="w-full max-w-6xl">
-                     <InfiniteMovingCards
-                         items={clientTestimonials}
-                         direction="right"
-                         speed="slow"
-               />
-                     </div>
-                 </div>
-             </div>
+        <div className="relative flex w/full justify-end">
+          <div className="relative w/full max-w-[460px] overflow-hidden rounded-[18px] border border-[#2c261b] shadow-[0_35px_60px_rgba(0,0,0,0.55)] md:-mb-28">
+            <Image
+              src={HERO_IMAGE}
+              alt="Law firm hero"
+              width={760}
+              height={900}
+              className="h-full w/full object-cover"
+              priority
+            />
+          </div>
         </div>
-     
-  )
+      </div>
+      <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-b from-transparent via-[#0a0a0d] to-[#f6f1e6]" aria-hidden />
+    </section>
+  );
 }
 
-export default HeroSection
+export default HeroSection;

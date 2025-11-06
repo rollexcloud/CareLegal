@@ -6,7 +6,7 @@ const nextConfig = {
         }
     },
     images: {
-        domains: ['images.unsplash.com', 'res.cloudinary.com', 'images.pexels.com', 'firebasestorage.googleapis.com']
+        domains: ['images.unsplash.com', 'res.cloudinary.com', 'images.pexels.com', 'firebasestorage.googleapis.com', 'websitedemos.net']
     }
 };
 

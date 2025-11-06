@@ -1,7 +1,6 @@
 'use client';
 
 import React, { ChangeEvent, FormEvent, useState } from 'react';
-import { BackgroundBeams } from '@/components/ui/background-beams';
 
 type FormField = 'name' | 'email' | 'phone' | 'message';
 
@@ -35,8 +34,7 @@ function ContactPage() {
 
   return (
     <section className="relative min-h-screen overflow-hidden bg-black/[0.96] bg-grid-white/[0.02] py-28 px-4">
-      <BackgroundBeams className="opacity-30" />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/70 via-black/80 to-black" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black via-black/90 to-black" />
 
       <div className="relative z-10 mx-auto max-w-6xl">
         <div className="mx-auto max-w-2xl text-center">
