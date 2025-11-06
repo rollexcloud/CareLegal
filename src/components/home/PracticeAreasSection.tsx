@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 const practiceAreas = [
   {
     number: ".01",
@@ -37,17 +39,20 @@ const practiceAreas = [
   },
 ];
 
-const moreAreas = [
-  "Insurance & Reinsurance Litigation",
-  "Employment Litigation & Counseling",
-  "Media & Entertainment Litigation",
+const PRACTICE_IMAGE =
+  "https://images.pexels.com/photos/5669602/pexels-photo-5669602.jpeg?auto=compress&cs=tinysrgb&w=640&dpr=1";
+
+const practiceStats = [
+  { value: "40+", label: "Dedicated Litigators" },
+  { value: "27", label: "Jurisdictions Covered" },
+  { value: "95%", label: "Dispute Success Rate" },
 ];
 
 function PracticeAreasSection() {
   return (
     <section id="practice-areas" className="bg-white pb-28 pt-24">
       <div className="mx-auto grid w/full max-w-[1140px] gap-16 px-4 sm:px-6 md:grid-cols-[0.95fr_1.1fr] md:items-start">
-        <div className="space-y-7">
+        <div className="space-y-8">
           <p className="text-[11px] font-semibold uppercase tracking-[0.4em] text-[#b4975a]">Practice Areas</p>
           <h2 className="text-[36px] font-semibold leading-tight text-[#1c170a] sm:text-[44px]">
             Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
@@ -55,8 +60,34 @@ function PracticeAreasSection() {
           <p className="text-[16px] leading-[1.9] text-[#5c5541]">
             Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
           </p>
+          <div className="relative h-64 w-full overflow-hidden border border-[#ede4d1] shadow-[0_18px_45px_rgba(0,0,0,0.12)] sm:h-72">
+            <Image
+              src={PRACTICE_IMAGE}
+              alt="Litigation team discussing strategy"
+              fill
+              sizes="(min-width: 1024px) 480px, 100vw"
+              className="object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-tr from-black/70 via-black/35 to-transparent" aria-hidden />
+            <div className="absolute bottom-6 left-6 space-y-2 text-white">
+              <span className="inline-flex items-center rounded-full border border-white/50 bg-white/10 px-4 py-1 text-[11px] font-semibold uppercase tracking-[0.35em]">
+                High-Stakes Counsel
+              </span>
+              <p className="max-w-sm text-[15px] leading-[1.8] text-white/80">
+                Counsel crafted for multijurisdictional disputes, regulatory scrutiny, and transformational transactions.
+              </p>
+            </div>
+          </div>
           <div className="mt-10 max-w-sm border-l-4 border-[#d8b86a] pl-6 text-[15px] leading-[1.9] text-[#5c5541]">
             &ldquo;Our experience spans corporate advisory, complex litigation, and regulatory support for global enterprises.&rdquo;
+          </div>
+          <div className="grid gap-6 pt-4 sm:grid-cols-3">
+            {practiceStats.map(({ value, label }) => (
+              <div key={label} className="border border-[#ede4d1] bg-[#fdfbf6] px-6 py-6 text-left shadow-[0_10px_30px_rgba(0,0,0,0.08)]">
+                <p className="text-[30px] font-semibold text-[#1c170a]">{value}</p>
+                <p className="mt-2 text-[12px] font-semibold uppercase tracking-[0.35em] text-[#b4975a]">{label}</p>
+              </div>
+            ))}
           </div>
         </div>
 
@@ -87,28 +118,6 @@ function PracticeAreasSection() {
         </div>
       </div>
 
-      <div className="mx-auto mt-14 w/full max-w-[1140px] px-4 sm:px-6">
-        <div className="flex flex-col gap-8 bg-[#c7a24a] px-8 py-10 text-[#1c170a] shadow-[0_20px_45px_rgba(0,0,0,0.18)] sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.35em]">More Practice Areas</p>
-            <p className="mt-3 text-[18px] font-semibold">Tailored support across emerging industries and jurisdictions.</p>
-          </div>
-          <ul className="grid gap-2 text-[14px] font-medium sm:grid-cols-3 sm:gap-6">
-            {moreAreas.map((area) => (
-              <li key={area} className="flex items-center gap-2">
-                <span className="h-1.5 w-1.5 bg-[#1c170a]" aria-hidden />
-                {area}
-              </li>
-            ))}
-          </ul>
-          <a
-            href="#contact"
-            className="inline-flex items-center justify-center border border-[#1c170a] px-6 py-3 text-[12px] font-semibold uppercase tracking-[0.35em] transition hover:bg-[#1c170a] hover:text-white"
-          >
-            View All Areas
-          </a>
-        </div>
-      </div>
     </section>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 
 import type { BlogPost } from "@/types/blog";
@@ -23,6 +23,44 @@ function formatDate(input: string) {
 type BlogListProps = {
   posts: BlogPost[];
 };
+
+function renderContent(raw: string) {
+  if (!raw) {
+    return null;
+  }
+
+  if (/[<>&]/.test(raw)) {
+    return (
+      <article
+        className="space-y-4 text-[15px] leading-[1.9] text-[#3b3527]"
+        dangerouslySetInnerHTML={{ __html: raw }}
+      />
+    );
+  }
+
+  const blocks = raw
+    .split(/\n{2,}/)
+    .map((block) => block.trim())
+    .filter(Boolean);
+
+  return (
+    <article className="space-y-4 text-[15px] leading-[1.9] text-[#3b3527]">
+      {blocks.map((block, index) => {
+        const lines = block.split(/\n/);
+        return (
+          <p key={`paragraph-${index}`}>
+            {lines.map((line, lineIndex) => (
+              <Fragment key={`paragraph-${index}-line-${lineIndex}`}>
+                {line}
+                {lineIndex < lines.length - 1 ? <br /> : null}
+              </Fragment>
+            ))}
+          </p>
+        );
+      })}
+    </article>
+  );
+}
 
 function BlogOverlay({ post, onClose }: { post: BlogPost; onClose: () => void }) {
   if (typeof document === "undefined") {
@@ -53,7 +91,7 @@ function BlogOverlay({ post, onClose }: { post: BlogPost; onClose: () => void })
               className="object-cover"
             />
           </div>
-          <article className="space-y-4 text-[15px] leading-[1.9] text-[#3b3527]" dangerouslySetInnerHTML={{ __html: post.content }} />
+          {renderContent(post.content)}
         </div>
       </div>
     </div>,

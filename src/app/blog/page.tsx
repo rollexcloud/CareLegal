@@ -1,7 +1,13 @@
 import { readBlogPosts } from "@/lib/blog-data";
 import BlogList from "@/components/home/BlogList";
+import { normalizeImageUrl } from "@/lib/normalizeImageUrl";
+
+const FALLBACK_IMAGE = "https://images.pexels.com/photos/442781/pexels-photo-442781.jpeg?auto=compress&cs=tinysrgb&w=1200&dpr=1";
 export default async function BlogPage() {
-  const posts = await readBlogPosts();
+  const posts = (await readBlogPosts()).map((post) => ({
+    ...post,
+    image: normalizeImageUrl(post.image, FALLBACK_IMAGE),
+  }));
 
   return (
     <main className="bg-[#f6f1e6] pb-28 pt-28">
