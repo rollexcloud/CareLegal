@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { BlogPost } from "@/types/blog";
 import { TeamMember } from "@/types/team";
@@ -59,8 +59,12 @@ export async function createTeamMember(formData: FormData) {
   }
 
   await saveTeamMember(newMember);
-  revalidatePath("/our-team");
-  revalidatePath("/blog/admin");
+  await Promise.all([
+    revalidatePath("/our-team"),
+    revalidatePath("/"),
+    revalidateTag("team-members"),
+    revalidatePath("/blog/admin"),
+  ]);
 }
 
 export async function updateTeamMember(formData: FormData) {
@@ -86,8 +90,12 @@ export async function updateTeamMember(formData: FormData) {
   }
 
   await saveTeamMember(updated);
-  revalidatePath("/our-team");
-  revalidatePath("/blog/admin");
+  await Promise.all([
+    revalidatePath("/our-team"),
+    revalidatePath("/"),
+    revalidateTag("team-members"),
+    revalidatePath("/blog/admin"),
+  ]);
 }
 
 export async function deleteTeamMember(formData: FormData) {
@@ -101,8 +109,12 @@ export async function deleteTeamMember(formData: FormData) {
   }
 
   await removeTeamMember(id);
-  revalidatePath("/our-team");
-  revalidatePath("/blog/admin");
+  await Promise.all([
+    revalidatePath("/our-team"),
+    revalidatePath("/"),
+    revalidateTag("team-members"),
+    revalidatePath("/blog/admin"),
+  ]);
 }
 
 export async function updatePost(formData: FormData) {

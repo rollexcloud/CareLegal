@@ -11,6 +11,7 @@ import { readTeamMembers } from "@/lib/team-data";
 
 async function HomePage() {
   const teamMembers = await readTeamMembers();
+  
 
   return (
     <main className="min-h-screen bg-background">
