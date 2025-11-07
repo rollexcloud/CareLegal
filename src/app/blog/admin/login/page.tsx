@@ -17,14 +17,15 @@ type LoginPageProps = {
 export default function BlogAdminLoginPage({ searchParams }: LoginPageProps) {
   const returnTo = searchParams?.returnTo;
 
-  if (!process.env.BLOG_ADMIN_PASSWORD || !process.env.BLOG_ADMIN_USERNAME) {
+  if (!process.env.BLOG_ADMIN_PASSWORD_HASH || !process.env.BLOG_ADMIN_PASSWORD_SALT || !process.env.BLOG_ADMIN_USERNAME) {
     return (
       <main className="min-h-screen bg-[#f6f1e6] py-32">
         <div className="mx-auto max-w-xl border border-[#d8c9a9] bg-white p-10 text-center shadow-[0_30px_70px_rgba(0,0,0,0.1)]">
           <h1 className="text-3xl font-semibold text-[#1c170a]">Admin password not configured</h1>
           <p className="mt-6 text-sm leading-relaxed text-[#5c5541]">
-            Set the <code className="bg-[#f1ead7] px-1 py-0.5 text-xs text-[#1c170a]">BLOG_ADMIN_USERNAME</code> and
-            <code className="ml-1 bg-[#f1ead7] px-1 py-0.5 text-xs text-[#1c170a]">BLOG_ADMIN_PASSWORD</code> environment variables to
+            Set the <code className="bg-[#f1ead7] px-1 py-0.5 text-xs text-[#1c170a]">BLOG_ADMIN_USERNAME</code> along with
+            <code className="ml-1 bg-[#f1ead7] px-1 py-0.5 text-xs text-[#1c170a]">BLOG_ADMIN_PASSWORD_HASH</code> and
+            <code className="ml-1 bg-[#f1ead7] px-1 py-0.5 text-xs text-[#1c170a]">BLOG_ADMIN_PASSWORD_SALT</code> environment variables to
             enable the admin panel.
           </p>
         </div>

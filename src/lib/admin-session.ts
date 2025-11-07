@@ -5,18 +5,16 @@ import { createHash } from "crypto";
 const SESSION_COOKIE_NAME = "carelegal_admin";
 const SESSION_MAX_AGE_SECONDS = 60 * 60 * 12; // 12 hours
 
-function ensurePasswordConfigured() {
-  if (!process.env.BLOG_ADMIN_PASSWORD) {
-    throw new Error("BLOG_ADMIN_PASSWORD env variable is not set.");
-  }
-}
-
 function credentialFingerprint() {
-  ensurePasswordConfigured();
   const username = process.env.BLOG_ADMIN_USERNAME || "owner";
-  const password = process.env.BLOG_ADMIN_PASSWORD as string;
+  const passwordHash = process.env.BLOG_ADMIN_PASSWORD_HASH;
+  const passwordSalt = process.env.BLOG_ADMIN_PASSWORD_SALT;
 
-  return createHash("sha256").update(`${username}:${password}`).digest("hex");
+  if (!passwordHash || !passwordSalt) {
+    throw new Error("BLOG_ADMIN_PASSWORD_HASH or BLOG_ADMIN_PASSWORD_SALT env variable is not set.");
+  }
+
+  return createHash("sha256").update(`${username}:${passwordHash}:${passwordSalt}`).digest("hex");
 }
 
 export function establishAdminSession() {
